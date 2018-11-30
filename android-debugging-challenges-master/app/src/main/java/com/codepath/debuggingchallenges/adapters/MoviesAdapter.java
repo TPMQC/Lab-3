@@ -1,5 +1,6 @@
 package com.codepath.debuggingchallenges.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -17,20 +18,23 @@ import com.codepath.debuggingchallenges.models.Movie;
 import java.util.List;
 
 public class MoviesAdapter extends ArrayAdapter<Movie> {
-
-    public MoviesAdapter(Context context, List<Movie> movies) {
-        super(context, 0, movies);
+    private Context context;
+    private List<Movie> movieList;
+    public MoviesAdapter(Context context, int resource ,List<Movie> movies) {
+        super(context, resource, movies);
+        this.context = context;
+        this.movieList = movies;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Movie movie = getItem(position);
+        Movie movie = movieList.get(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater
-                    .from(getContext())
-                    .inflate(R.layout.item_movie, parent, false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+
+            convertView = inflater.inflate(R.layout.item_movie,null);
         }
         // Lookup view for data population
         TextView tvName = (TextView) convertView.findViewById(R.id.tvTitle);
@@ -50,10 +54,10 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 
         String ratingText = String.format(resources.getString(R.string.rating), movieRating);
         tvRating.setText(ratingText);
-
         Glide.with(getContext()).load(movie.getPosterUrl()).into(ivPoster);
-
-        // Return the completed view to render on screen
+//
+//
+//         Return the completed view to render on screen
         return convertView;
     }
 }

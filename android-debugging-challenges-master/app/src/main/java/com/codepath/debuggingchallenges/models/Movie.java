@@ -1,10 +1,15 @@
 package com.codepath.debuggingchallenges.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class Movie {
     private String title;
@@ -29,14 +34,12 @@ public class Movie {
         return String.format("https://image.tmdb.org/t/p/w342/%s", posterUrl);
     }
 
-    public static ArrayList<Movie> fromJSONArray(JSONArray jsonArray) {
-        ArrayList<Movie> results = new ArrayList<>();
+    public static List<Movie> fromJSONArray(JSONArray jsonArray) throws JSONException {
+        List<Movie> results = new ArrayList<>();
+        Log.i("smile", "logan le" );
         for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                results.add(new Movie(jsonArray.getJSONObject(i)));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            results.add(new Movie(jsonArray.getJSONObject(i)));
+            Log.i("smile", String.valueOf(i) );
         }
         return results;
     }
