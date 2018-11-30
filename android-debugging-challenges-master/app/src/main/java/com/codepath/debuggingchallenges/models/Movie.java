@@ -18,7 +18,7 @@ public class Movie {
 
     public Movie(JSONObject jsonObject) throws JSONException {
         this.posterUrl = jsonObject.getString("poster_path");
-        this.title = jsonObject.getString("original-title");
+        this.title = jsonObject.getString("original_title");
         this.rating = jsonObject.getDouble("vote_average");
     }
 
@@ -36,7 +36,6 @@ public class Movie {
 
     public static List<Movie> fromJSONArray(JSONArray jsonArray) throws JSONException {
         List<Movie> results = new ArrayList<>();
-        Log.i("smile", "logan le" );
         for (int i = 0; i < jsonArray.length(); i++) {
             results.add(new Movie(jsonArray.getJSONObject(i)));
             Log.i("smile", String.valueOf(i) );

@@ -37,8 +37,6 @@ public class MoviesActivity extends AppCompatActivity {
         fetchMovies();
         adapter = new MoviesAdapter(this,R.layout.item_movie,movies);
         // Attach the adapter to a ListView
-        Toast.makeText(this,
-                String.valueOf(movies.size()),Toast.LENGTH_SHORT).show();
         lvMovies.setAdapter(adapter);
     }
 
