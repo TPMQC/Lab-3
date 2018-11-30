@@ -19,13 +19,16 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.loopj.android.http.AsyncHttpClient.log;
+
 public class MoviesActivity extends AppCompatActivity {
 
     private static final String API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed";
+    private static final String MOVIE_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
 
-    ListView lvMovies;
-    MoviesAdapter adapter;
-    ArrayList<Movie> movies;
+    private ListView lvMovies;
+    private MoviesAdapter adapter;
+    private ArrayList<Movie> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,23 +36,24 @@ public class MoviesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies);
         lvMovies = (ListView) findViewById(R.id.lv_movieList);
         movies = new ArrayList<>();
+        adapter = new MoviesAdapter(this, R.layout.item_movie, movies);
         // Create the adapter to convert the array to views
         fetchMovies();
-        adapter = new MoviesAdapter(this,R.layout.item_movie,movies);
         // Attach the adapter to a ListView
         lvMovies.setAdapter(adapter);
     }
 
 
     private void fetchMovies() {
-        String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(MOVIE_URL, new JsonHttpResponseHandler() {
+            //define a call back method
+
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) { // choose this method because the data gets back is an object
                 try {
-                    JSONArray moviesJson = response.getJSONArray("results");
-                    movies.addAll(Movie.fromJSONArray(moviesJson));
+                    JSONArray movieJsonArray = response.getJSONArray("results");
+                    movies.addAll(Movie.fromJsonArray(movieJsonArray)); // get a list of movies from JsonArray
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -57,9 +61,11 @@ public class MoviesActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(MoviesActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
     }
 }
+
